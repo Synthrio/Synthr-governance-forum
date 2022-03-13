@@ -1969,6 +1969,10 @@ developer:
     default: false
     client: true
     hidden: true
+  enable_revamped_user_menu:
+    default: false
+    client: true
+    hidden: true
 
 embedding:
   embed_by_username:
