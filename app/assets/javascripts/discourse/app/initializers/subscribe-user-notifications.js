@@ -26,7 +26,12 @@ export default {
 
     if (user) {
       bus.subscribe("/reviewable_counts", (data) => {
-        user.set("reviewable_count", data.reviewable_count);
+        if (data.reviewable_count !== undefined) {
+          user.set("reviewable_count", data.reviewable_count);
+        }
+        if (siteSettings.enable_revamped_user_menu) {
+          user.set("unseen_reviewable_count", data.unseen_reviewable_count);
+        }
       });
 
       bus.subscribe(

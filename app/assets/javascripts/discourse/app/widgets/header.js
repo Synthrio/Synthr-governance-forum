@@ -74,7 +74,7 @@ createWidget("header-notifications", {
     } else {
       if (this.siteSettings.enable_revamped_user_menu) {
         const unread = user.all_unread_notifications || 0;
-        const reviewables = user.reviewable_count || 0;
+        const reviewables = user.unseen_reviewable_count || 0;
         const count = unread + reviewables;
         if (
           user.unread_high_priority_notifications &&

@@ -50,8 +50,12 @@ class NotificationsController < ApplicationController
           changed = current_user.saw_notification_id(max_id)
         end
 
-        user.reload
-        user.publish_notifications_state if changed
+        if params[:bump_last_seen_reviewable] && !@readonly_mode && guardian.can_see_review_queue?
+          current_user.bump_last_seen_reviewable!
+        end
+
+        current_user.reload
+        current_user.publish_notifications_state if changed
 
         render_json_dump(
           notifications: serialize_data(notifications, NotificationSerializer),

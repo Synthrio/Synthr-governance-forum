@@ -10,3 +10,4 @@ remove high pri reorder in the "all" notification tabs -- DONE
 notification/reviewable store cache on the frontend
 check discourse-encrypt notifications (decrypt titles and whatnot)
 chat plugin notifications
+deprecate old notification/reviewable count attributes

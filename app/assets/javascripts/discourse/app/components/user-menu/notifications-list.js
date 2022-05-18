@@ -28,9 +28,10 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
 
   fetchItems() {
     const params = {
-      recent: true,
-      silent: this.currentUser.enforcedSecondFactor,
       limit: 30,
+      recent: true,
+      bump_last_seen_reviewable: true,
+      silent: this.currentUser.enforcedSecondFactor,
     };
     let cacheKey = "recent-notifications";
     if (this.filterByType) {

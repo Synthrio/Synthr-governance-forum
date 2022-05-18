@@ -458,7 +458,8 @@ class Reviewable < ActiveRecord::Base
     sort_order: nil,
     from_date: nil,
     to_date: nil,
-    additional_filters: {}
+    additional_filters: {},
+    preload: true
   )
     order = case sort_order
             when 'score_asc'
@@ -473,11 +474,11 @@ class Reviewable < ActiveRecord::Base
 
     if username.present?
       user_id = User.find_by_username(username)&.id
-      return [] if user_id.blank?
+      return none if user_id.blank?
     end
 
-    return [] if user.blank?
-    result = viewable_by(user, order: order)
+    return none if user.blank?
+    result = viewable_by(user, order: order, preload: preload)
 
     result = by_status(result, status)
     result = result.where(id: ids) if ids
@@ -489,7 +490,7 @@ class Reviewable < ActiveRecord::Base
 
     if reviewed_by
       reviewed_by_id = User.find_by_username(reviewed_by)&.id
-      return [] if reviewed_by_id.nil?
+      return none if reviewed_by_id.nil?
 
       result = result.joins(<<~SQL
         INNER JOIN(
@@ -534,6 +535,16 @@ class Reviewable < ActiveRecord::Base
     result
   end
 
+  def self.unseen_list_for(user, **opts)
+    results = list_for(user, **opts)
+    if user.last_seen_reviewable_id
+      results = results.where(
+        "reviewables.id > ?",
+        user.last_seen_reviewable_id
+      )
+    end
+    results
+  end
   # ReviewableAkismetPost : Akismet post #n - <title>
   # ReviewableAkismetUser : Akismet sus user @someone
   # ReviewableFlaggedPost : @flagger post#n - <title>

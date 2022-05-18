@@ -43,6 +43,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :dismissed_banner_key,
              :is_anonymous,
              :reviewable_count,
+             :unseen_reviewable_count,
              :read_faq?,
              :automatically_unpin_topics,
              :mailing_list_mode,
@@ -283,10 +284,6 @@ class CurrentUserSerializer < BasicUserSerializer
     object.anonymous?
   end
 
-  def reviewable_count
-    Reviewable.list_for(object).count
-  end
-
   def can_review
     scope.can_see_review_queue?
   end
@@ -344,6 +341,10 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def include_all_unread_notifications?
+    SiteSetting.enable_revamped_user_menu
+  end
+
+  def include_unseen_reviewable_count?
     SiteSetting.enable_revamped_user_menu
   end
 end

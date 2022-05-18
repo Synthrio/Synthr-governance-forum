@@ -620,12 +620,39 @@ class User < ActiveRecord::Base
     @unread_total_notifications ||= notifications.where("read = false").count
   end
 
+  # TODO: add tests to verify these methods only return count of pending reviewables
+  def reviewable_count
+    Reviewable.list_for(self).count
+  end
+
+  def unseen_reviewable_count
+    Reviewable.unseen_list_for(self).count
+  end
+
   def saw_notification_id(notification_id)
     if seen_notification_id.to_i < notification_id.to_i
       update_columns(seen_notification_id: notification_id.to_i)
       true
     else
       false
+    end
+  end
+
+  def bump_last_seen_reviewable!
+    max_reviewable_id = Reviewable
+      .unseen_list_for(self, preload: false, limit: 1)
+      .except(:order)
+      .order(id: :desc)
+      .pluck(:id)
+      .first
+
+    if max_reviewable_id && (!last_seen_reviewable_id || max_reviewable_id > last_seen_reviewable_id)
+      update!(last_seen_reviewable_id: max_reviewable_id)
+      MessageBus.publish(
+        "/reviewable_counts",
+        { unseen_reviewable_count: self.unseen_reviewable_count },
+        user_ids: [self.id]
+      )
     end
   end
 

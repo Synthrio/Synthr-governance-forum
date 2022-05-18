@@ -7,7 +7,6 @@ import Docking from "discourse/mixins/docking";
 import MountWidget from "discourse/components/mount-widget";
 import ItsATrap from "@discourse/itsatrap";
 import RerenderOnDoNotDisturbChange from "discourse/mixins/rerender-on-do-not-disturb-change";
-import { headerOffset } from "discourse/lib/offset-calculator";
 import { observes } from "discourse-common/utils/decorators";
 import { topicTitleDecorators } from "discourse/components/topic-title";
 
@@ -31,7 +30,8 @@ const SiteHeaderComponent = MountWidget.extend(
       "currentUser.unread_notifications",
       "currentUser.unread_high_priority_notifications",
       "currentUser.all_unread_notifications",
-      "currentUser.reviewable_count",
+      "currentUser.reviewable_count", // TODO: remove this when enable_revamped_user_menu setting is removed
+      "currentUser.unseen_reviewable_count",
       "session.defaultColorSchemeIsDark",
       "session.darkModeAvailable"
     )

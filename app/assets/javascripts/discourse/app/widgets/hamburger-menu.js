@@ -355,7 +355,7 @@ export default createWidget("hamburger-menu", {
   },
 
   html(attrs, state) {
-    if (!state.loaded) {
+    if (!this.siteSettings.enable_revamped_user_menu && !state.loaded) {
       this.refreshReviewableCount(state);
     }
 
