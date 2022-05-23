@@ -26,6 +26,14 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
     return I18n.t("user.dismiss_notifications_tooltip");
   }
 
+  get itemsCacheKey() {
+    let key = "recent-notifications";
+    if (this.filterByType) {
+      key += `-type-${this.filterByType}`;
+    }
+    return key;
+  }
+
   fetchItems() {
     const params = {
       limit: 30,
@@ -33,14 +41,12 @@ export default class UserMenuNotificationsList extends UserMenuItemsList {
       bump_last_seen_reviewable: true,
       silent: this.currentUser.enforcedSecondFactor,
     };
-    let cacheKey = "recent-notifications";
+
     if (this.filterByType) {
       params.filter_by_type = this.filterByType;
-      cacheKey += `-type-${this.filterByType}`;
     }
-
     return this.store
-      .findStale("notification", params, { cacheKey })
+      .findStale("notification", params)
       .refresh()
       .then((c) => {
         return c.content;

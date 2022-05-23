@@ -1,6 +1,6 @@
 import GlimmerComponent from "discourse/components/glimmer";
 import { tracked } from "@glimmer/tracking";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 
 const DefaultTabId = "all-notifications";
 const DefaultPanelComponent = "user-menu/notifications-list";
@@ -68,7 +68,7 @@ export default class UserMenu extends GlimmerComponent {
         id: "review-queue",
         icon: "flag",
         panelComponent: "user-menu/reviewables-list",
-        count: this.currentUser.reviewable_count, // TODO add this count to the avatar bubble
+        count: this.currentUser.reviewable_count,
       });
     }
 

@@ -27,6 +27,10 @@ export default class UserMenuReviewablesList extends UserMenuItemsList {
     return I18n.t("user_menu.reviewable.view_all");
   }
 
+  get itemsCacheKey() {
+    return "pending-reviewables";
+  }
+
   fetchItems() {
     return ajax("/review/lightweight-list").then((data) => {
       return data.reviewables.map((item) => {

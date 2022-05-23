@@ -1,7 +1,7 @@
 import GlimmerComponent from "discourse/components/glimmer";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import I18n from "I18n";
+import Session from "discourse/models/session";
 
 export default class UserMenuItemsList extends GlimmerComponent {
   @tracked loading = false;
@@ -10,6 +10,10 @@ export default class UserMenuItemsList extends GlimmerComponent {
   constructor() {
     super(...arguments);
     this._load();
+  }
+
+  get itemsCacheKey() {
+    return null;
   }
 
   get showAll() {
@@ -37,11 +41,17 @@ export default class UserMenuItemsList extends GlimmerComponent {
   }
 
   _load() {
-    this.loading = true;
+    const cached = this._getCachedItems();
+    if (cached?.length) {
+      this.items = cached;
+    } else {
+      this.loading = true;
+    }
     this.fetchItems()
       .then((items) => {
         const valid = items.every((item) => {
           if (!item.userMenuComponent) {
+            // eslint-disable-next-line no-console
             console.error("userMenuComponent property is blank on", item);
             return false;
           }
@@ -50,14 +60,30 @@ export default class UserMenuItemsList extends GlimmerComponent {
         if (!valid) {
           throw new Error("userMenuComponent must be present on all items");
         }
+        this._setCachedItems(items);
         this.items = items;
       })
       .finally(() => (this.loading = false));
   }
 
+  _getCachedItems() {
+    const key = this.itemsCacheKey;
+    if (key) {
+      return Session.currentProp(`user-menu-items:${key}`);
+    }
+  }
+
+  _setCachedItems(newItems) {
+    const key = this.itemsCacheKey;
+    if (key) {
+      Session.currentProp(`user-menu-items:${key}`, newItems);
+    }
+  }
+
   @action
   dismissButtonClick() {
     // TODO do something
+    // eslint-disable-next-line no-console
     console.log("do something");
   }
 }
