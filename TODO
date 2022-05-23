@@ -1,13 +1,14 @@
 check new user ring backdrop -- should we change it so it shows up on the first notification regardless whether high pri or not?
-open and close on mobile
+open and close on mobile - DONE
 blank page syndrome
 bookmark reminders tab
 dismiss button in the various tabs
 TODO comments in the code
 a11y and keyboard nav
-last seen reviewable column in users
-remove high pri reorder in the "all" notification tabs -- DONE
-notification/reviewable store cache on the frontend
+last seen reviewable column in users - DONE
+remove high pri reorder in the "all" notification tabs - DONE
+notification/reviewable store cache on the frontend - DONE
 check discourse-encrypt notifications (decrypt titles and whatnot)
 chat plugin notifications
 deprecate old notification/reviewable count attributes
+hide likes tab if like frequency setting is 'never'
